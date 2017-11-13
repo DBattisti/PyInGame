@@ -1,0 +1,23 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "RuntimePython",
+	"Description": "Python in game runtime",
+	"Category": "Other",
+	"CreatedBy": "Douglas Battisti",
+	"CreatedByURL": "",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"SupportURL": "",
+	"CanContainContent": true,
+	"IsBetaVersion": false,
+	"Installed": false,
+	"Modules": [
+		{
+			"Name": "RuntimePython",
+			"Type": "Developer",
+			"LoadingPhase": "Default"
+		}
+	]
+}

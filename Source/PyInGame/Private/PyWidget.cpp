@@ -2,9 +2,12 @@
 
 #include "PyWidget.h"
 #include "Interpreter.h"
+#include "GameFramework/Actor.h"
 
-FTransform UPyWidget::executeCode(FString teste) {
-	Interpreter inter("teste");
-	FTransform modData =  inter.RunText(teste);
-	return modData;
+
+bool UPyWidget::executeCode(AActor* actor, FString teste) {
+	Interpreter* Runnable = Interpreter::ModuleInit(teste);
+	actor->SetActorTransform(Runnable->IsThreadFinished());
+	Runnable->Shutdown();
+	return true;
 }

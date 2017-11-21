@@ -15,9 +15,6 @@ class PYINGAME_API UPyWidget : public UUserWidget
 	GENERATED_BODY()
 public:
 	UFUNCTION(BlueprintCallable, Category = "Widget")
-	FTransform executeCode(FString teste);
+	bool executeCode(AActor* actor, FString teste);
 
-	
-	
-	
 };

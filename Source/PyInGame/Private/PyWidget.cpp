@@ -5,9 +5,12 @@
 #include "GameFramework/Actor.h"
 
 
-bool UPyWidget::executeCode(AActor* actor, FString teste) {
-	Interpreter* Runnable = Interpreter::ModuleInit(teste);
-	actor->SetActorTransform(Runnable->IsThreadFinished());
-	Runnable->Shutdown();
-	return true;
+void UPyWidget::ExecuteCode(FString teste) {
+	Runnable = Interpreter::RunThisText(teste);
+}
+
+void UPyWidget::ApplyResult(AActor* actor) {
+	if (Runnable->IsThreadFinished()) {
+		actor->SetActorTransform(Runnable->transform);
+	}
 }

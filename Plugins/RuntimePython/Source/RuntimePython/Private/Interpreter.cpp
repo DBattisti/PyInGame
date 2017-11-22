@@ -8,15 +8,17 @@
 
 Interpreter* Interpreter::Runnable = NULL;
 
-Interpreter::Interpreter(FString source)
+Interpreter::Interpreter(FString source): script(source)
 {
-	this->script = source;
+	UE_LOG(LogTemp, Warning, TEXT(":::::Constructor:::::\n"));
 	Thread = FRunnableThread::Create(this, TEXT("Interpreter"), 0, TPri_BelowNormal); //windows default = 8mb for thread, could specify more
 }
 
 Interpreter::~Interpreter()
 {
+	UE_LOG(LogTemp, Warning, TEXT(":::::Destructor:::::\n"));
 	if (Py_FinalizeEx() < 0) {
+		UE_LOG(LogTemp, Warning, TEXT("An Error Occurred EXIT(120) line 20\n"));
 		exit(120);
 	}
 	PyMem_RawFree(this->program);
@@ -27,47 +29,60 @@ Interpreter::~Interpreter()
 
 bool Interpreter::Init()
 {
-	program = Py_DecodeLocale("teste", NULL);
+	UE_LOG(LogTemp, Warning, TEXT(":::::Init:::::\n"));
+	this->program = Py_DecodeLocale("teste", NULL);
 	Py_SetProgramName(this->program);
 	Py_Initialize();
 
+	bTermined = false;
 	return true;
 }
 
 uint32 Interpreter::Run()
 {
+	UE_LOG(LogTemp, Warning, TEXT(":::::Run:::::\n"));
 	//Initial wait before starting
 	FPlatformProcess::Sleep(0.03);
-	if (StopTaskCounter.GetValue() == 0) {
-		Runnable->RunText();
+	while (StopTaskCounter.GetValue() == 0) {
+		if (!this->script.IsEmpty()) {
+			Runnable->RunText();
+			this->script.Empty();
+		}
 	}
 	return 0;
 }
 
-Interpreter* Interpreter::ModuleInit(FString source) 
+Interpreter* Interpreter::RunThisText(FString source)
 {
+	UE_LOG(LogTemp, Warning, TEXT(":::::Module Init:::::\n"));
 	//Create new instance of thread if it does not exist
-	//		and the platform supports multi threading!
+	//and the platform supports multi threading!
 	if (!Runnable && FPlatformProcess::SupportsMultithreading())
 	{
 		Runnable = new Interpreter(source);
 	}
+
+	//If already exists an instance set new source script
+	Runnable->script = source;
 	return Runnable;
 }
 
 void Interpreter::Stop()
 {
+	UE_LOG(LogTemp, Warning, TEXT(":::::Stop:::::\n"));
 	StopTaskCounter.Increment();
 }
 
 void Interpreter::EnsureCompletion()
 {
+	UE_LOG(LogTemp, Warning, TEXT(":::::Ensure Completion:::::\n"));
 	Stop();
 	Thread->WaitForCompletion();
 }
 
 void Interpreter::Shutdown()
 {
+	UE_LOG(LogTemp, Warning, TEXT(":::::Shutdown:::::\n"));
 	if (Runnable)
 	{
 		Runnable->EnsureCompletion();
@@ -76,14 +91,16 @@ void Interpreter::Shutdown()
 	}
 }
 
-FTransform Interpreter::IsThreadFinished()
+bool Interpreter::IsThreadFinished()
 {
+	UE_LOG(LogTemp, Warning, TEXT(":::::IsThreadFinished:::::\n"));
 	if (Runnable) return Runnable->IsFinished();
-	return FTransform();
+	return false;
 }
 
 void Interpreter::RunText()
 {
+	UE_LOG(LogTemp, Warning, TEXT(":::::Run Text:::::\n"));
 	PyObject *pPosx, *pPosy, *pPosz, *pValue;
 
 	Py_Initialize();

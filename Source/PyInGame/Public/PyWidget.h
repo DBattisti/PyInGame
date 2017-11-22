@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "Interpreter.h"
 #include "PyWidget.generated.h"
 
 /**
@@ -14,7 +15,11 @@ class PYINGAME_API UPyWidget : public UUserWidget
 {
 	GENERATED_BODY()
 public:
+	Interpreter* Runnable;
+	
 	UFUNCTION(BlueprintCallable, Category = "Widget")
-	bool executeCode(AActor* actor, FString teste);
-
+	void ExecuteCode(FString teste);
+	
+	UFUNCTION(BlueprintCallable, Category = "Widget")
+	void ApplyResult(AActor* actor);
 };

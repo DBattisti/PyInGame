@@ -8,7 +8,7 @@ public class PyInGame : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "RuntimePython" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "PythonLibrary" });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 
